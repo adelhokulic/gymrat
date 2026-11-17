@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		saveToStorage(AUTH_KEY, state);
 	}, [state]);
 
-	const login = (username: string, password: string) => {
+	const login = (username: string, password: string): boolean => {
 		const foundUser = users.find(
 			(user) => user.username === username && user.password === password,
 		);

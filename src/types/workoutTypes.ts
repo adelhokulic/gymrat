@@ -17,3 +17,14 @@ export type Workout = {
 	duration: number;
 	exercises: Exercise[];
 };
+export type WorkoutState = {
+	workouts: Workout[];
+};
+export type WorkoutAction =
+	| { type: "ADD_WORKOUT"; payload: Workout }
+	| { type: "UPDATE_WORKOUT"; payload: Workout }
+	| { type: "DELETE_WORKOUT"; payload: number }
+	| {
+			type: "DELETE_EXERCISE";
+			payload: { workoutId: number; exerciseId: number };
+	  };

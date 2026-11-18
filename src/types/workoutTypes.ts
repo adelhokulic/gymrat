@@ -28,3 +28,13 @@ export type WorkoutAction =
 			type: "DELETE_EXERCISE";
 			payload: { workoutId: number; exerciseId: number };
 	  };
+
+export type WorkoutContextType = {
+	workouts: Workout[];
+	addWorkout: (workout: NewWorkout) => void;
+	updateWorkout: (workout: Workout) => void;
+	deleteWorkout: (id: number) => void;
+	deleteExercise: (workoutId: number, exerciseId: number) => void;
+};
+
+export type NewWorkout = Omit<Workout, "id" | "userId">;

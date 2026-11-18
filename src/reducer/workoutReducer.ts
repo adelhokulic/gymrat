@@ -35,6 +35,9 @@ const workoutReducer = (
 						: workout;
 				}),
 			};
+		default:
+			return state;
 	}
-	return state;
 };
+
+export default workoutReducer;

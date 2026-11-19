@@ -1,3 +1,4 @@
+import { useWorkout } from "../context/WorkoutContext";
 import { Workout } from "../types/workoutTypes";
 import "./WorkoutCard.css";
 
@@ -6,6 +7,7 @@ type WorkoutCardProp = {
 };
 
 const WorkoutCard = ({ workout }: WorkoutCardProp) => {
+	const { deleteWorkout, deleteExercise } = useWorkout();
 	return (
 		<article className="workout-card">
 			<header className="workout-card-header">
@@ -24,10 +26,11 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 						<li key={exercise.id} className="workout-exercise">
 							<span className="workout-exercise-name">{exercise.name}</span>
 							<span className="workout-exercise-stats">
-								{exercise.sets} sets × {exercise.reps} reps · {exercise.weight} kg
+								{exercise.sets} sets × {exercise.reps} reps · {exercise.weight}{" "}
+								kg
 							</span>
-							{/* TODO (sljedeći korak): na klik obriši ovu vježbu (deleteExercise) */}
 							<button
+								onClick={() => deleteExercise(workout.id, exercise.id)}
 								type="button"
 								className="workout-exercise-remove"
 								aria-label="Remove exercise"
@@ -44,8 +47,11 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 				<button type="button" className="card-btn card-btn--edit">
 					Edit
 				</button>
-				{/* TODO (sljedeći korak): na klik obriši trening (deleteWorkout) */}
-				<button type="button" className="card-btn card-btn--delete">
+				<button
+					onClick={() => deleteWorkout(workout.id)}
+					type="button"
+					className="card-btn card-btn--delete"
+				>
 					Delete
 				</button>
 			</footer>

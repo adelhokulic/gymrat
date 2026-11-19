@@ -1,6 +1,7 @@
 import "./App.css";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
+import WorkoutForm from "./components/WorkoutForm";
 import { useAuth } from "./context/AuthContext";
 
 const App = () => {
@@ -10,7 +11,9 @@ const App = () => {
 			{user ? (
 				<>
 					<Navbar />
-					<main>Workouts coming soon</main>
+					<main className="app-main">
+						<WorkoutForm />
+					</main>
 				</>
 			) : (
 				<Login />

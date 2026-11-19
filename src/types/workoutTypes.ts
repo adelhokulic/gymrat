@@ -7,7 +7,7 @@ export type Exercise = {
 	reps: number;
 	weight: number;
 };
-export type WorkoutType = (typeof workoutTypes)[number];
+export type NewExercise = Omit<Exercise, "id">;
 
 export type Workout = {
 	id: number;
@@ -17,6 +17,8 @@ export type Workout = {
 	duration: number;
 	exercises: Exercise[];
 };
+export type WorkoutType = (typeof workoutTypes)[number];
+
 export type WorkoutState = {
 	workouts: Workout[];
 };
@@ -38,3 +40,10 @@ export type WorkoutContextType = {
 };
 
 export type NewWorkout = Omit<Workout, "id" | "userId">;
+
+export type WorkoutFormValues = {
+	date: string;
+	type: WorkoutType;
+	duration: number;
+	exercises: NewExercise[];
+};

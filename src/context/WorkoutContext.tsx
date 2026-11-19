@@ -27,11 +27,11 @@ export const WorkoutProvider = ({ children }: { children: ReactNode }) => {
 		saveToStorage(WORKOUT_KEY, state);
 	}, [state]);
 
-	const addWorkout = (NewWorkOut: NewWorkout) => {
+	const addWorkout = (newWorkout: NewWorkout) => {
 		if (!user) return;
 		dispatch({
 			type: "ADD_WORKOUT",
-			payload: { ...NewWorkOut, id: Date.now(), userId: user.id },
+			payload: { ...newWorkout, id: Date.now(), userId: user.id },
 		});
 	};
 	const updateWorkout = (workout: Workout) => {

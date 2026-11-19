@@ -38,7 +38,10 @@ const WorkoutForm = () => {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="workout-form" noValidate>
-			<h2 className="workout-form-title">New workout</h2>
+			<div className="workout-form-header">
+				<h2 className="workout-form-title">New workout</h2>
+				<p className="workout-form-subtitle">Log what you did today</p>
+			</div>
 
 			<div className="workout-form-row">
 				<div className="form-field">

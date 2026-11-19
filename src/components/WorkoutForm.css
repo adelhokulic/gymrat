@@ -1,33 +1,53 @@
+/* Forma koristi container query (@container): raspored se prilagođava širini FORME,
+   a ne ekrana. Zato izgleda dobro i kad je forma uska kolona pored liste. */
 .workout-form {
-	background: #ffffff;
-	border-radius: 12px;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-	padding: 24px 16px;
+	container-type: inline-size;
+	background: var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-card);
+	padding: 20px 16px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
+.workout-form-header {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
 .workout-form-title {
 	margin: 0;
 	font-size: 20px;
-	color: #111827;
+	color: var(--color-text);
 }
 
-/* datum, vrsta, trajanje: jedno ispod drugog na telefonu, u redu na većem ekranu */
+.workout-form-subtitle {
+	margin: 0;
+	font-size: 14px;
+	color: var(--color-text-muted);
+}
+
+/* datum, vrsta, trajanje */
 .workout-form-row {
 	display: grid;
-	grid-template-columns: 1fr;
-	gap: 16px;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
 }
 
-@media (min-width: 640px) {
-	.workout-form {
-		padding: 24px;
-	}
+/* datum preko cijelog reda, vrsta i trajanje jedno pored drugog */
+.workout-form-row > .form-field:first-child {
+	grid-column: 1 / -1;
+}
 
+@container (min-width: 560px) {
 	.workout-form-row {
 		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.workout-form-row > .form-field:first-child {
+		grid-column: auto;
 	}
 }
 
@@ -35,37 +55,59 @@
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
+	min-width: 0;
 }
 
-.form-field label {
-	font-size: 14px;
+.form-field label,
+.exercise-field label {
+	font-size: 12px;
 	font-weight: 600;
-	color: #374151;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
 }
 
 .workout-form input,
 .workout-form select {
 	width: 100%;
-	padding: 10px 12px;
+	height: 42px;
+	padding: 0 12px;
 	font-size: 16px;
 	font-family: inherit;
-	border: 1px solid #d1d5db;
-	border-radius: 8px;
-	background: #ffffff;
+	color: var(--color-text);
+	background: var(--color-surface);
+	border: 1px solid var(--color-border-strong);
+	border-radius: var(--radius-sm);
 	outline: none;
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+/* vlastita strelica za select, ista u svim browserima */
+.workout-form select {
+	appearance: none;
+	padding-right: 36px;
+	text-transform: capitalize;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	cursor: pointer;
+}
+
+.workout-form input:hover,
+.workout-form select:hover {
+	border-color: #9ca3af;
+}
+
 .workout-form input:focus,
 .workout-form select:focus {
-	border-color: #ea580c;
-	box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.18);
 }
 
 .form-error {
 	margin: 0;
 	font-size: 13px;
-	color: #dc2626;
+	color: var(--color-danger);
 }
 
 /* vježbe */
@@ -73,6 +115,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+	padding-top: 20px;
+	border-top: 1px solid var(--color-border);
 }
 
 .exercises-header {
@@ -85,20 +129,25 @@
 .exercises-header h3 {
 	margin: 0;
 	font-size: 16px;
-	color: #111827;
+	color: var(--color-text);
 }
 
 /* jedna vježba = kartica
-   telefon:  [ Name ............ ] [✕]
-             [ Sets ] [ Reps ] [ Weight ] */
+   usko:   [ Name ............ ] [✕]
+           [ Sets ] [ Reps ] [ Weight ] */
 .exercise-row {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 40px;
+	grid-template-columns: 1fr 1fr 1fr 42px;
 	gap: 10px 8px;
 	padding: 12px;
-	background: #f9fafb;
-	border: 1px solid #e5e7eb;
-	border-radius: 10px;
+	background: var(--color-surface-muted);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	transition: border-color 0.15s;
+}
+
+.exercise-row:focus-within {
+	border-color: #fdba74;
 }
 
 .exercise-field {
@@ -106,14 +155,6 @@
 	flex-direction: column;
 	gap: 4px;
 	min-width: 0;
-}
-
-.exercise-field label {
-	font-size: 12px;
-	font-weight: 600;
-	letter-spacing: 0.02em;
-	text-transform: uppercase;
-	color: #6b7280;
 }
 
 .exercise-field--name {
@@ -131,11 +172,11 @@
 	grid-column: 1 / -1;
 }
 
-/* veći ekran: sve u jednom redu
+/* široko: sve u jednom redu
    [ Name ........ ] [ Sets ] [ Reps ] [ Weight ] [✕] */
-@media (min-width: 640px) {
+@container (min-width: 560px) {
 	.exercise-row {
-		grid-template-columns: 2fr 1fr 1fr 1fr 40px;
+		grid-template-columns: 2fr 1fr 1fr 1fr 42px;
 	}
 
 	.exercise-field--name {
@@ -149,35 +190,44 @@
 
 /* dugmad */
 .btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	padding: 10px 16px;
 	font-size: 14px;
 	font-weight: 600;
 	font-family: inherit;
 	border: none;
-	border-radius: 8px;
+	border-radius: var(--radius-sm);
 	cursor: pointer;
-	transition: background 0.15s, opacity 0.15s;
+	transition: background 0.15s, opacity 0.15s, transform 0.05s;
+}
+
+.btn:active:not(:disabled) {
+	transform: translateY(1px);
 }
 
 .btn:disabled {
-	opacity: 0.4;
+	opacity: 0.35;
 	cursor: not-allowed;
 }
 
 .btn-primary {
-	padding: 12px;
+	height: 46px;
 	font-size: 16px;
 	color: #ffffff;
-	background: #ea580c;
+	background: var(--color-primary);
+	box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
-	background: #c2410c;
+	background: var(--color-primary-hover);
 }
 
 .btn-secondary {
-	color: #ea580c;
-	background: #fff7ed;
+	padding: 8px 12px;
+	color: var(--color-primary);
+	background: var(--color-primary-soft);
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -185,10 +235,10 @@
 }
 
 .btn-danger {
-	width: 40px;
-	padding: 10px 0;
-	color: #dc2626;
-	background: #fef2f2;
+	width: 42px;
+	padding: 0;
+	color: var(--color-danger);
+	background: var(--color-danger-soft);
 }
 
 .btn-danger:hover:not(:disabled) {

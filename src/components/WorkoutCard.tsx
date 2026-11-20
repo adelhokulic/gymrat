@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
 import { Workout } from "../types/workoutTypes";
 import "./WorkoutCard.css";
+import WorkoutForm from "./WorkoutForm";
 
 type WorkoutCardProp = {
 	workout: Workout;
@@ -8,7 +10,11 @@ type WorkoutCardProp = {
 
 const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 	const { deleteWorkout, deleteExercise } = useWorkout();
-	return (
+	const [isWorkoutEditing, setIsWorkoutEditing] = useState(false);
+
+	return isWorkoutEditing ? (
+		<WorkoutForm workout={workout} onClose={() => setIsWorkoutEditing(false)} />
+	) : (
 		<article className="workout-card">
 			<header className="workout-card-header">
 				<div className="workout-card-info">
@@ -43,8 +49,11 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 			</ul>
 
 			<footer className="workout-card-actions">
-				{/* TODO (sljedeći korak): na klik prebaci karticu u formu za izmjenu */}
-				<button type="button" className="card-btn card-btn--edit">
+				<button
+					onClick={() => setIsWorkoutEditing(true)}
+					type="button"
+					className="card-btn card-btn--edit"
+				>
 					Edit
 				</button>
 				<button

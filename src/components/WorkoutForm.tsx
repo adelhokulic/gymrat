@@ -1,9 +1,18 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { WorkoutFormValues, workoutTypes } from "../types/workoutTypes";
+import {
+	Workout,
+	WorkoutFormValues,
+	workoutTypes,
+} from "../types/workoutTypes";
 import { useWorkout } from "../context/WorkoutContext";
 import "./WorkoutForm.css";
 
-const WorkoutForm = () => {
+type WorkoutFormProps = {
+	workout?: Workout;
+	onClose?: () => void;
+};
+
+const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 	const {
 		register,
 		handleSubmit,
@@ -12,17 +21,19 @@ const WorkoutForm = () => {
 		formState: { errors },
 	} = useForm<WorkoutFormValues>({
 		defaultValues: {
-			date: new Date().toISOString().slice(0, 10),
-			type: workoutTypes[0],
-			duration: 30,
-			exercises: [{ name: "", sets: 3, reps: 10, weight: 0 }],
+			date: workout ? workout.date : new Date().toISOString().slice(0, 10),
+			type: workout ? workout.type : workoutTypes[0],
+			duration: workout ? workout.duration : 30,
+			exercises: workout
+				? workout.exercises.map(({ id, ...rest }) => rest)
+				: [{ name: "", sets: 3, reps: 10, weight: 0 }],
 		},
 	});
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: "exercises",
 	});
-	const { addWorkout } = useWorkout();
+	const { addWorkout, updateWorkout } = useWorkout();
 
 	const onSubmit = (data: WorkoutFormValues) => {
 		const newWorkout = {
@@ -32,14 +43,25 @@ const WorkoutForm = () => {
 				id: Date.now() + index,
 			})),
 		};
-		addWorkout(newWorkout);
-		reset();
+		if (workout) {
+			updateWorkout({
+				...workout,
+				...newWorkout,
+			});
+			reset(data);
+			onClose?.();
+		} else {
+			addWorkout(newWorkout);
+			reset();
+		}
 	};
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="workout-form" noValidate>
 			<div className="workout-form-header">
-				<h2 className="workout-form-title">New workout</h2>
+				<h2 className="workout-form-title">
+					{workout ? "Edit workout" : "New workout"}
+				</h2>
 				<p className="workout-form-subtitle">Log what you did today</p>
 			</div>
 
@@ -187,10 +209,16 @@ const WorkoutForm = () => {
 					);
 				})}
 			</div>
-
-			<button type="submit" className="btn btn-primary">
-				Save workout
-			</button>
+			<div className="workout-form-actions">
+				{onClose && (
+					<button type="button" onClick={onClose} className="btn btn-ghost">
+						Cancel
+					</button>
+				)}
+				<button type="submit" className="btn btn-primary">
+					Save workout
+				</button>
+			</div>
 		</form>
 	);
 };

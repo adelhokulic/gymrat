@@ -1,6 +1,7 @@
 import "./App.css";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
+import PersonalRecords from "./components/PersonalRecords";
 import WeeklyStats from "./components/WeeklyStats";
 import WorkoutForm from "./components/WorkoutForm";
 import WorkoutList from "./components/WorkoutList";
@@ -17,6 +18,7 @@ const App = () => {
 						<WorkoutForm />
 						<div className="app-sidebar">
 							<WeeklyStats />
+							<PersonalRecords />
 							<WorkoutList />
 						</div>
 					</main>

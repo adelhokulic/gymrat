@@ -62,15 +62,15 @@ const WeeklyStats = () => {
 					aria-valuemax={100}
 					aria-valuenow={Math.round(progressGoal)}
 				>
-					{/* TODO: width neka bude `${progressGoal}%` */}
 					<div
 						className="weekly-goal-fill"
 						style={{ width: `${progressGoal}%` }}
 					/>
 				</div>
 
-				{/* TODO: prikaži ovaj <p> samo ako je workoutCount >= weekly_goal */}
-				<p className="weekly-goal-done">Goal reached! 🎉</p>
+				{workoutCount >= weekly_goal && (
+					<p className="weekly-goal-done">Goal reached! 🎉</p>
+				)}
 			</div>
 		</section>
 	);

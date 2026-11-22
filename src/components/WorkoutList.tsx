@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Badge, Button } from "react-bootstrap";
 import { useWorkout } from "../context/WorkoutContext";
 import WorkoutCard from "./WorkoutCard";
-import "./WorkoutCard.css";
 import { WorkoutType, workoutTypes } from "../types/workoutTypes";
 
 const WorkoutList = () => {
@@ -10,9 +10,15 @@ const WorkoutList = () => {
 
 	if (workouts.length === 0) {
 		return (
-			<p className="workout-list-empty">
-				No workouts yet. Add your first one using the form.
-			</p>
+			<section className="bento-card empty-state text-center fade-in">
+				<span className="empty-icon" aria-hidden="true">
+					🏋️
+				</span>
+				<h2 className="h5 fw-bold mt-3">No workouts yet</h2>
+				<p className="text-body-secondary mb-0">
+					Add your first one using the form.
+				</p>
+			</section>
 		);
 	}
 	const filteredWorkouts =
@@ -21,35 +27,58 @@ const WorkoutList = () => {
 			: workouts.filter((workout) => workout.type === typeFilter);
 
 	return (
-		<section className="workout-list">
-			<h2 className="workout-list-title">Your workouts ({workouts.length})</h2>
-			<div className="workout-filters">
-				<button
-					className={`filter-btn ${typeFilter === "all" ? "active" : ""}`}
-					type="button"
-					onClick={() => setTypeFilter("all")}
+		<section>
+			<div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+				<h2 className="section-title mb-0 d-flex align-items-center gap-2">
+					Your workouts
+					<Badge pill bg="" className="count-badge">
+						{workouts.length}
+					</Badge>
+				</h2>
+				<div
+					className="d-flex flex-wrap gap-2"
+					role="group"
+					aria-label="Filter by type"
 				>
-					All
-				</button>
-				{workoutTypes.map((type) => {
-					return (
-						<button
-							className={`filter-btn ${typeFilter === type ? "active" : ""}`}
-							type="button"
-							key={type}
-							onClick={() => setTypeFilter(type)}
-						>
-							{type}
-						</button>
-					);
-				})}
+					<Button
+						className="filter-btn"
+						variant="outline-primary"
+						size="sm"
+						active={typeFilter === "all"}
+						type="button"
+						onClick={() => setTypeFilter("all")}
+					>
+						All
+					</Button>
+					{workoutTypes.map((type) => {
+						return (
+							<Button
+								className="filter-btn text-capitalize"
+								variant="outline-primary"
+								size="sm"
+								active={typeFilter === type}
+								type="button"
+								key={type}
+								onClick={() => setTypeFilter(type)}
+							>
+								{type}
+							</Button>
+						);
+					})}
+				</div>
 			</div>
+
 			{filteredWorkouts.length === 0 && (
-				<p className="workout-list-no-results">No {typeFilter} workouts yet.</p>
+				<p className="bento-card text-center text-body-secondary mb-0">
+					No {typeFilter} workouts yet.
+				</p>
 			)}
-			{filteredWorkouts.map((workout) => (
-				<WorkoutCard workout={workout} key={workout.id} />
-			))}
+
+			<div className="workout-grid d-grid gap-3">
+				{filteredWorkouts.map((workout) => (
+					<WorkoutCard workout={workout} key={workout.id} />
+				))}
+			</div>
 		</section>
 	);
 };

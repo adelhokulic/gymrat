@@ -1,5 +1,4 @@
 import { useWorkout } from "../context/WorkoutContext";
-import "./PersonalRecords.css";
 
 const PersonalRecords = () => {
 	const { workouts } = useWorkout();
@@ -21,9 +20,9 @@ const PersonalRecords = () => {
 
 	if (sortedRecords.length === 0) {
 		return (
-			<section className="personal-records">
-				<h2 className="personal-records-title">Personal records</h2>
-				<p className="personal-records-empty">
+			<section className="bento-card records-card fade-in fade-in-delay-3">
+				<p className="bento-label">Personal records</p>
+				<p className="text-body-secondary mb-0">
 					Add a workout to see your records.
 				</p>
 			</section>
@@ -31,10 +30,10 @@ const PersonalRecords = () => {
 	}
 
 	return (
-		<section className="personal-records">
-			<h2 className="personal-records-title">Personal records</h2>
+		<section className="bento-card records-card fade-in fade-in-delay-3">
+			<p className="bento-label">Personal records</p>
 
-			<ol className="personal-records-list">
+			<ol className="records-list">
 				{sortedRecords.map(([name, weight], index) => {
 					return (
 						<li key={name} className="record">

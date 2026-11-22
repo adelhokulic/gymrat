@@ -1,11 +1,11 @@
 import { useFieldArray, useForm } from "react-hook-form";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import {
 	Workout,
 	WorkoutFormValues,
 	workoutTypes,
 } from "../types/workoutTypes";
 import { useWorkout } from "../context/WorkoutContext";
-import "./WorkoutForm.css";
 import { useTemplate } from "../context/TemplateContext";
 
 type WorkoutFormProps = {
@@ -76,202 +76,241 @@ const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="workout-form" noValidate>
-			<div className="workout-form-header">
-				<h2 className="workout-form-title">
-					{workout ? "Edit workout" : "New workout"}
-				</h2>
-				<p className="workout-form-subtitle">Log what you did today</p>
-			</div>
+		<section
+			className={`bento-card workout-form fade-in ${workout ? "workout-form--edit" : ""}`}
+		>
+			<Form onSubmit={handleSubmit(onSubmit)} noValidate>
+				<header className="mb-4">
+					<p className="bento-label mb-1">
+						{workout ? "Editing" : "Log a session"}
+					</p>
+					<h2 className="section-title mb-0">
+						{workout ? "Edit workout" : "New workout"}
+					</h2>
+				</header>
 
-			{!workout && templates.length > 0 && (
-				<div className="form-field template-picker">
-					<label htmlFor="template">Template</label>
-					<select
-						id="template"
-						onChange={(e) => handleTemplate(e.target.value)}
-					>
-						<option value="">Use a template…</option>
-						{templates.map((template) => {
-							return (
-								<option key={template.id} value={template.id}>
+				{!workout && templates.length > 0 && (
+					<div className="template-picker mb-4">
+						<Form.Label htmlFor="template">Template</Form.Label>
+						<Form.Select
+							id="template"
+							onChange={(e) => handleTemplate(e.target.value)}
+						>
+							<option value="">Use a template…</option>
+							{templates.map((template) => {
+								return (
+									<option key={template.id} value={template.id}>
+										{template.name}
+									</option>
+								);
+							})}
+						</Form.Select>
+						<div className="template-chips">
+							{templates.map((template) => (
+								<span key={template.id} className="template-chip">
 									{template.name}
-								</option>
-							);
-						})}
-					</select>
-					<div className="template-chips">
-						{templates.map((template) => (
-							<span key={template.id} className="template-chip">
-								{template.name}
-								<button
-									type="button"
-									className="template-chip-remove"
-									aria-label={`Delete template ${template.name}`}
-									onClick={() => deleteTemplate(template.id)}
-								>
-									✕
-								</button>
-							</span>
-						))}
+									<button
+										type="button"
+										className="template-chip-remove"
+										aria-label={`Delete template ${template.name}`}
+										onClick={() => deleteTemplate(template.id)}
+									>
+										✕
+									</button>
+								</span>
+							))}
+						</div>
 					</div>
-				</div>
-			)}
-			<div className="workout-form-row">
-				<div className="form-field">
-					<label htmlFor="date">Date</label>
-					<input
-						{...register("date", { required: "Date is required" })}
-						id="date"
-						type="date"
-					/>
-					{errors.date && <p className="form-error">{errors.date.message}</p>}
-				</div>
+				)}
 
-				<div className="form-field">
-					<label htmlFor="type">Type</label>
-					<select
-						{...register("type", { required: "Type is required" })}
-						id="type"
-					>
-						{workoutTypes.map((workoutType) => {
-							return (
-								<option key={workoutType} value={workoutType}>
-									{workoutType}
-								</option>
-							);
-						})}
-					</select>
-				</div>
+				<Row className="g-3 mb-4">
+					<Col xs={12}>
+						<Form.Label htmlFor="date">Date</Form.Label>
+						<Form.Control
+							{...register("date", { required: "Date is required" })}
+							id="date"
+							type="date"
+							isInvalid={!!errors.date}
+						/>
+						{errors.date && (
+							<Form.Control.Feedback type="invalid">
+								{errors.date.message}
+							</Form.Control.Feedback>
+						)}
+					</Col>
 
-				<div className="form-field">
-					<label htmlFor="duration">Duration (min)</label>
-					<input
-						{...register("duration", {
-							valueAsNumber: true,
-							required: "Duration is required",
-							min: { value: 1, message: "Duration must be at least 1 minute" },
-						})}
-						id="duration"
-						type="number"
-						min={1}
-					/>
-					{errors.duration && (
-						<p className="form-error">{errors.duration.message}</p>
-					)}
-				</div>
-			</div>
+					<Col xs={6}>
+						<Form.Label htmlFor="type">Type</Form.Label>
+						<Form.Select
+							{...register("type", { required: "Type is required" })}
+							id="type"
+							className="text-capitalize"
+						>
+							{workoutTypes.map((workoutType) => {
+								return (
+									<option key={workoutType} value={workoutType}>
+										{workoutType}
+									</option>
+								);
+							})}
+						</Form.Select>
+					</Col>
 
-			<div className="exercises">
-				<div className="exercises-header">
-					<h3>Exercises</h3>
-					<button
+					<Col xs={6}>
+						<Form.Label htmlFor="duration">Duration (min)</Form.Label>
+						<Form.Control
+							{...register("duration", {
+								valueAsNumber: true,
+								required: "Duration is required",
+								min: {
+									value: 1,
+									message: "Duration must be at least 1 minute",
+								},
+							})}
+							id="duration"
+							type="number"
+							min={1}
+							isInvalid={!!errors.duration}
+						/>
+						{errors.duration && (
+							<Form.Control.Feedback type="invalid">
+								{errors.duration.message}
+							</Form.Control.Feedback>
+						)}
+					</Col>
+				</Row>
+
+				<div className="d-flex align-items-center justify-content-between gap-2 mb-3">
+					<h3 className="h6 fw-bold mb-0">Exercises</h3>
+					<Button
 						onClick={() => append({ name: "", sets: 3, reps: 10, weight: 0 })}
 						type="button"
-						className="btn btn-secondary"
+						variant="outline-primary"
+						size="sm"
 					>
 						+ Add exercise
-					</button>
+					</Button>
 				</div>
 
-				{fields.map((field, index) => {
-					return (
-						<div key={field.id} className="exercise-row">
-							<div className="exercise-field exercise-field--name">
-								<label htmlFor={`exercise-${index}-name`}>Name</label>
-								<input
-									{...register(`exercises.${index}.name`, {
-										required: "Name is required",
-									})}
-									id={`exercise-${index}-name`}
-									type="text"
-									placeholder="Bench press"
-								/>
+				<div className="d-grid gap-2 mb-4">
+					{fields.map((field, index) => {
+						return (
+							<div key={field.id} className="exercise-row">
+								<Row className="g-2">
+									<Col>
+										<Form.Label htmlFor={`exercise-${index}-name`}>
+											Name
+										</Form.Label>
+										<Form.Control
+											{...register(`exercises.${index}.name`, {
+												required: "Name is required",
+											})}
+											id={`exercise-${index}-name`}
+											type="text"
+											placeholder="Bench press"
+											isInvalid={!!errors.exercises?.[index]?.name}
+										/>
+									</Col>
+									<Col xs="auto" className="d-flex align-items-end">
+										<Button
+											onClick={() => remove(index)}
+											disabled={fields.length === 1}
+											type="button"
+											variant="outline-danger"
+											className="exercise-remove"
+											aria-label={`Remove exercise ${index + 1}`}
+										>
+											✕
+										</Button>
+									</Col>
+									<div className="w-100" />
+									<Col xs={4}>
+										<Form.Label htmlFor={`exercise-${index}-sets`}>
+											Sets
+										</Form.Label>
+										<Form.Control
+											{...register(`exercises.${index}.sets`, {
+												required: "Sets are required",
+												valueAsNumber: true,
+												min: { value: 1, message: "Sets must be at least 1" },
+											})}
+											id={`exercise-${index}-sets`}
+											type="number"
+											min={1}
+											isInvalid={!!errors.exercises?.[index]?.sets}
+										/>
+									</Col>
+									<Col xs={4}>
+										<Form.Label htmlFor={`exercise-${index}-reps`}>
+											Reps
+										</Form.Label>
+										<Form.Control
+											{...register(`exercises.${index}.reps`, {
+												required: "Reps are required",
+												valueAsNumber: true,
+												min: { value: 1, message: "Reps must be at least 1" },
+											})}
+											id={`exercise-${index}-reps`}
+											type="number"
+											min={1}
+											isInvalid={!!errors.exercises?.[index]?.reps}
+										/>
+									</Col>
+									<Col xs={4}>
+										<Form.Label htmlFor={`exercise-${index}-weight`}>
+											Kg
+										</Form.Label>
+										<Form.Control
+											{...register(`exercises.${index}.weight`, {
+												required: "Weight is required",
+												valueAsNumber: true,
+												min: { value: 0, message: "Weight must be at least 0" },
+											})}
+											id={`exercise-${index}-weight`}
+											type="number"
+											min={0}
+											step={0.5}
+											isInvalid={!!errors.exercises?.[index]?.weight}
+										/>
+									</Col>
+								</Row>
+								{errors.exercises?.[index]?.name && (
+									<p className="exercise-error">
+										{errors.exercises?.[index]?.name?.message}
+									</p>
+								)}
+								{errors.exercises?.[index]?.sets && (
+									<p className="exercise-error">
+										{errors.exercises?.[index]?.sets?.message}
+									</p>
+								)}
+								{errors.exercises?.[index]?.reps && (
+									<p className="exercise-error">
+										{errors.exercises?.[index]?.reps?.message}
+									</p>
+								)}
+								{errors.exercises?.[index]?.weight && (
+									<p className="exercise-error">
+										{errors.exercises?.[index]?.weight?.message}
+									</p>
+								)}
 							</div>
-							<div className="exercise-field">
-								<label htmlFor={`exercise-${index}-sets`}>Sets</label>
-								<input
-									{...register(`exercises.${index}.sets`, {
-										required: "Sets are required",
-										valueAsNumber: true,
-										min: { value: 1, message: "Sets must be at least 1" },
-									})}
-									id={`exercise-${index}-sets`}
-									type="number"
-									min={1}
-								/>
-							</div>
-							<div className="exercise-field">
-								<label htmlFor={`exercise-${index}-reps`}>Reps</label>
-								<input
-									{...register(`exercises.${index}.reps`, {
-										required: "Reps are required",
-										valueAsNumber: true,
-										min: { value: 1, message: "Reps must be at least 1" },
-									})}
-									id={`exercise-${index}-reps`}
-									type="number"
-									min={1}
-								/>
-							</div>
-							<div className="exercise-field">
-								<label htmlFor={`exercise-${index}-weight`}>Weight (kg)</label>
-								<input
-									{...register(`exercises.${index}.weight`, {
-										required: "Weight is required",
-										valueAsNumber: true,
-										min: { value: 0, message: "Weight must be at least 0" },
-									})}
-									id={`exercise-${index}-weight`}
-									type="number"
-									min={0}
-									step={0.5}
-								/>
-							</div>
-							<button
-								onClick={() => remove(index)}
-								disabled={fields.length === 1}
-								type="button"
-								className="btn btn-danger exercise-remove"
-								aria-label={`Remove exercise ${index + 1}`}
-							>
-								✕
-							</button>
-							{errors.exercises?.[index]?.name && (
-								<p className="form-error exercise-error">
-									{errors.exercises?.[index]?.name?.message}
-								</p>
-							)}
-							{errors.exercises?.[index]?.sets && (
-								<p className="form-error exercise-error">
-									{errors.exercises?.[index]?.sets?.message}
-								</p>
-							)}
-							{errors.exercises?.[index]?.reps && (
-								<p className="form-error exercise-error">
-									{errors.exercises?.[index]?.reps?.message}
-								</p>
-							)}
-							{errors.exercises?.[index]?.weight && (
-								<p className="form-error exercise-error">
-									{errors.exercises?.[index]?.weight?.message}
-								</p>
-							)}
-						</div>
-					);
-				})}
-			</div>
-			<div className="workout-form-actions">
-				{onClose && (
-					<button type="button" onClick={onClose} className="btn btn-ghost">
-						Cancel
-					</button>
-				)}
-				<button type="submit" className="btn btn-primary">
-					Save workout
-				</button>
-			</div>
-		</form>
+						);
+					})}
+				</div>
+
+				<div className="d-flex gap-2">
+					{onClose && (
+						<Button type="button" onClick={onClose} variant="outline-secondary">
+							Cancel
+						</Button>
+					)}
+					<Button type="submit" variant="primary" className="flex-grow-1">
+						Save workout
+					</Button>
+				</div>
+			</Form>
+		</section>
 	);
 };
 

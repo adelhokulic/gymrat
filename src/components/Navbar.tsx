@@ -1,26 +1,38 @@
+import { Button, Container, Navbar as BsNavbar } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import "./Navbar.css";
 
 const Navbar = () => {
 	const { user, logout } = useAuth();
+	const initials = user?.name
+		.split(" ")
+		.map((part) => part[0])
+		.join("")
+		.slice(0, 2);
+
 	return (
-		<header className="navbar">
-			<div className="navbar-inner">
-				<span className="navbar-logo">GymRat</span>
+		<BsNavbar sticky="top" className="app-navbar py-3">
+			<Container>
+				<BsNavbar.Brand className="app-brand">
+					GymRat<span className="brand-dot">.</span>
+				</BsNavbar.Brand>
 
-				<div className="navbar-user">
-					<span className="navbar-name">{user?.name}</span>
-
-					<button
+				<div className="d-flex align-items-center gap-2 gap-sm-3 min-w-0">
+					<span className="avatar" aria-hidden="true">
+						{initials}
+					</span>
+					<span className="navbar-name text-truncate">{user?.name}</span>
+					<Button
 						onClick={() => logout()}
 						type="button"
-						className="navbar-logout"
+						variant="outline-secondary"
+						size="sm"
+						className="flex-shrink-0"
 					>
 						Log out
-					</button>
+					</Button>
 				</div>
-			</div>
-		</header>
+			</Container>
+		</BsNavbar>
 	);
 };
 

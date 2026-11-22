@@ -1,8 +1,16 @@
 # GymRat
 
-A training journal with user login. Each user logs workouts with exercises, edits them directly in the list, filters them by type and sees statistics for the current week.
+A training journal with user login. Each user logs workouts with exercises, edits them directly in the list, filters them by type and follows their progress through weekly statistics, a weekly goal and personal records.
 
-Built as an assignment in the ITMentorstva frontend program.
+Built as an assignment in the ITMentorstva frontend program and part of my [portfolio](https://github.com/adelhokulic/cv-portfolio).
+
+![GymRat dashboard](docs/dashboard-desktop.png)
+
+<p align="center">
+  <img src="docs/login.png" alt="Login page" width="62%" />
+  &nbsp;
+  <img src="docs/dashboard-phone.png" alt="GymRat on a phone" width="22%" />
+</p>
 
 ## Features
 
@@ -17,16 +25,27 @@ Built as an assignment in the ITMentorstva frontend program.
 - **Personal records**: the heaviest weight ever lifted for each exercise, sorted from heaviest. "Bench press" and "bench press " count as the same exercise.
 - **Workout templates**: save any workout as a named template, fill the new workout form from it in one click, and delete templates you no longer need.
 - **Per-user data**: each user sees only their own workouts and templates.
-- **Persistence**: user and workouts are saved in `localStorage`.
-- Responsive layout: form and list side by side on wide screens, stacked on phones.
+- **Persistence**: the logged-in user, workouts and templates are saved in `localStorage`.
+
+## Design
+
+The interface follows the design of my portfolio, so all projects look like one family:
+
+- **React-Bootstrap** layout (`Container`, `Row`, `Col`, `Form`, `Button`, `ProgressBar`, `Alert`, `Badge`)
+- **Bento dashboard**: stats, weekly goal and personal records as cards in one row, then the form and the workout list side by side
+- Brand blue `#2f6fed` with a blue to violet gradient, the **Inter** font and rounded cards that lift on hover
+- Translucent navbar with a blur effect
+- Cards fade in one after another with a CSS `@keyframes` animation, which is turned off for users who prefer reduced motion
+- Each workout type has its own color (strength blue, cardio rose, stretching violet)
+- Responsive: one column on phones, two columns on large screens
 
 ## Tech stack
 
 - React 19 + TypeScript 6
 - Create React App
+- React-Bootstrap 2 + Bootstrap 5.3
 - React Hook Form (`useForm`, `useFieldArray`)
 - Context API + `useReducer` for global state
-- Plain CSS with CSS custom properties
 
 ## Getting started
 
@@ -37,14 +56,13 @@ npm start
 
 The app runs at http://localhost:3000.
 
-### Test users
+### Demo user
 
-| Username | Password | Name |
-|---|---|---|
-| `adel` | `123456` | Adel Hokulic |
-| `merima` | `123456` | Merima Mulic |
+| Username | Password |
+|---|---|
+| `user` | `user` |
 
-Log in as both to see that each user only has access to their own workouts.
+Users live in `src/data/users.json`. Every user only sees their own workouts and templates, so you can add another user there to try that out.
 
 ## State management
 
@@ -73,7 +91,9 @@ src/
 ├── reducer/      authReducer, workoutReducer, templateReducer
 ├── types/        userTypes, workoutTypes, templateTypes (workout types are defined once and the TS type is derived from them)
 ├── utils/        storage (localStorage helper), date (start of the current week)
-└── data/         users.json (fake user database)
+├── data/         users.json (fake user database)
+├── index.css     design tokens and Bootstrap overrides
+└── App.css       layout and component styles
 ```
 
 ## Notes

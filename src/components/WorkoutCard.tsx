@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Button } from "react-bootstrap";
 import { useWorkout } from "../context/WorkoutContext";
 import { Workout } from "../types/workoutTypes";
-import "./WorkoutCard.css";
 import WorkoutForm from "./WorkoutForm";
 import { useTemplate } from "../context/TemplateContext";
 
@@ -22,16 +22,21 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 		addTemplate(name.trim(), workout);
 	};
 
+	const displayDate = new Date(`${workout.date}T00:00:00`).toLocaleDateString(
+		"en-GB",
+		{ weekday: "short", day: "numeric", month: "short", year: "numeric" },
+	);
+
 	return isWorkoutEditing ? (
 		<WorkoutForm workout={workout} onClose={() => setIsWorkoutEditing(false)} />
 	) : (
-		<article className="workout-card">
-			<header className="workout-card-header">
-				<div className="workout-card-info">
-					<span className="workout-card-date">{workout.date}</span>
-					<span className={`workout-badge workout-badge--${workout.type}`}>
+		<article className={`bento-card workout-card workout-card--${workout.type}`}>
+			<header className="d-flex align-items-start justify-content-between gap-3 mb-3">
+				<div>
+					<span className={`type-badge type-badge--${workout.type}`}>
 						{workout.type}
 					</span>
+					<h3 className="workout-card-date mt-2 mb-0">{displayDate}</h3>
 				</div>
 				<span className="workout-card-duration">{workout.duration} min</span>
 			</header>
@@ -59,28 +64,32 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 				})}
 			</ul>
 
-			<footer className="workout-card-actions">
-				<button
+			<footer className="d-flex flex-wrap align-items-center gap-2 mt-3">
+				<Button
 					onClick={() => onNameTemplate()}
 					type="button"
-					className="card-btn card-btn--template"
+					variant="link"
+					size="sm"
+					className="template-link me-auto px-0"
 				>
 					Save as template
-				</button>
-				<button
+				</Button>
+				<Button
 					onClick={() => setIsWorkoutEditing(true)}
 					type="button"
-					className="card-btn card-btn--edit"
+					variant="outline-secondary"
+					size="sm"
 				>
 					Edit
-				</button>
-				<button
+				</Button>
+				<Button
 					onClick={() => deleteWorkout(workout.id)}
 					type="button"
-					className="card-btn card-btn--delete"
+					variant="outline-danger"
+					size="sm"
 				>
 					Delete
-				</button>
+				</Button>
 			</footer>
 		</article>
 	);

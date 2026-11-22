@@ -1,6 +1,6 @@
+import { Col, ProgressBar } from "react-bootstrap";
 import { useWorkout } from "../context/WorkoutContext";
 import { getWeekStart } from "../utils/date";
-import "./WeeklyStats.css";
 
 const weekly_goal = 4;
 
@@ -23,56 +23,50 @@ const WeeklyStats = () => {
 	const heaviestWeight = Math.max(0, ...allWeights);
 
 	return (
-		<section className="weekly-stats">
-			<h2 className="weekly-stats-title">This week</h2>
+		<>
+			<Col md={6} lg={4}>
+				<section className="bento-card bento-card--hero stat-goal fade-in">
+					<p className="bento-label">This week · Weekly goal</p>
+					<div className="d-flex align-items-baseline gap-2 mb-3">
+						<span className="bento-number" data-stat="workouts">
+							{workoutCount}
+						</span>
+						<span className="stat-of">/ {weekly_goal} workouts</span>
+					</div>
+					<ProgressBar
+						now={progressGoal}
+						aria-label="Weekly goal progress"
+						className="mb-2"
+					/>
+					{workoutCount >= weekly_goal ? (
+						<p className="goal-done mb-0">Goal reached! 🎉</p>
+					) : (
+						<p className="text-body-secondary small mb-0">
+							{weekly_goal - workoutCount} to go this week
+						</p>
+					)}
+				</section>
+			</Col>
 
-			<div className="weekly-stats-grid">
-				<div className="stat-tile">
-					<span className="stat-value">{workoutCount}</span>
-					<span className="stat-label">Workouts</span>
-				</div>
+			<Col xs={6} md={3} lg={2}>
+				<section className="bento-card stat-tile fade-in fade-in-delay-1">
+					<p className="bento-label">Minutes</p>
+					<span className="stat-value" data-stat="minutes">
+						{totalMinutes}
+					</span>
+				</section>
+			</Col>
 
-				<div className="stat-tile">
-					<span className="stat-value">{totalMinutes}</span>
-					<span className="stat-label">Minutes</span>
-				</div>
-
-				<div className="stat-tile">
-					<span className="stat-value">
+			<Col xs={6} md={3} lg={2}>
+				<section className="bento-card stat-tile fade-in fade-in-delay-2">
+					<p className="bento-label">Heaviest lift</p>
+					<span className="stat-value" data-stat="heaviest">
 						{heaviestWeight}
 						<span className="stat-unit">kg</span>
 					</span>
-					<span className="stat-label">Heaviest lift</span>
-				</div>
-			</div>
-
-			<div className="weekly-goal">
-				<div className="weekly-goal-header">
-					<span className="weekly-goal-label">Weekly goal</span>
-					<span className="weekly-goal-count">
-						{workoutCount} / {weekly_goal} workouts
-					</span>
-				</div>
-
-				<div
-					className="weekly-goal-track"
-					role="progressbar"
-					aria-label="Weekly goal progress"
-					aria-valuemin={0}
-					aria-valuemax={100}
-					aria-valuenow={Math.round(progressGoal)}
-				>
-					<div
-						className="weekly-goal-fill"
-						style={{ width: `${progressGoal}%` }}
-					/>
-				</div>
-
-				{workoutCount >= weekly_goal && (
-					<p className="weekly-goal-done">Goal reached! 🎉</p>
-				)}
-			</div>
-		</section>
+				</section>
+			</Col>
+		</>
 	);
 };
 

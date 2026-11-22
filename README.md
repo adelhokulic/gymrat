@@ -13,7 +13,10 @@ Built as an assignment in the ITMentorstva frontend program.
 - **Deleting** a whole workout or a single exercise. The last exercise in a workout can't be removed.
 - **Filter by type**: All, Strength, Cardio, Stretching.
 - **Weekly statistics** for the current week (from Monday): number of workouts, total minutes and heaviest lift.
-- **Per-user data**: each user sees only their own workouts.
+- **Weekly goal** (4 workouts) with a progress bar.
+- **Personal records**: the heaviest weight ever lifted for each exercise, sorted from heaviest. "Bench press" and "bench press " count as the same exercise.
+- **Workout templates**: save any workout as a named template, fill the new workout form from it in one click, and delete templates you no longer need.
+- **Per-user data**: each user sees only their own workouts and templates.
 - **Persistence**: user and workouts are saved in `localStorage`.
 - Responsive layout: form and list side by side on wide screens, stacked on phones.
 
@@ -51,23 +54,24 @@ The assignment suggests **Recoil** (atoms + an atom effect for `localStorage`). 
 |---|---|
 | atom for the logged-in user | `AuthContext` + `authReducer` |
 | atom for workouts | `WorkoutContext` + `workoutReducer` |
-| one atom effect that saves several atoms to `localStorage` | one shared helper, `loadFromStorage` / `saveToStorage` (`src/utils/storage.ts`), used by both contexts: lazy init in `useReducer` for reading, `useEffect` for writing |
-| `useRecoilValue` / `useSetRecoilState` | custom hooks `useAuth()` and `useWorkout()` |
+| atom for templates (bonus) | `TemplateContext` + `templateReducer` |
+| one atom effect that saves several atoms to `localStorage` | one shared helper, `loadFromStorage` / `saveToStorage` (`src/utils/storage.ts`), used by all three contexts: lazy init in `useReducer` for reading, `useEffect` for writing |
+| `useRecoilValue` / `useSetRecoilState` | custom hooks `useAuth()`, `useWorkout()` and `useTemplate()` |
 
 **Global vs. local state**
 
-- **Global** (context): the logged-in user and all workouts, because many components need them.
+- **Global** (context): the logged-in user, all workouts and all templates, because many components need them.
 - **Local** (`useState` in a component): whether a card is in edit mode (`WorkoutCard`), the active filter (`WorkoutList`) and the login error message (`Login`), because only one component needs each of them.
-- **Derived** (calculated on every render, never stored): the current user's workouts, filtered workouts and the weekly statistics.
+- **Derived** (calculated on every render, never stored): the current user's workouts and templates, filtered workouts, the weekly statistics, goal progress and personal records.
 
 ## Project structure
 
 ```
 src/
-├── components/   Login, Navbar, WorkoutForm, WorkoutList, WorkoutCard, WeeklyStats
-├── context/      AuthContext, WorkoutContext (providers + useAuth / useWorkout hooks)
-├── reducer/      authReducer, workoutReducer
-├── types/        userTypes, workoutTypes (workout types are defined once and the TS type is derived from them)
+├── components/   Login, Navbar, WorkoutForm, WorkoutList, WorkoutCard, WeeklyStats, PersonalRecords
+├── context/      AuthContext, WorkoutContext, TemplateContext (providers + useAuth / useWorkout / useTemplate hooks)
+├── reducer/      authReducer, workoutReducer, templateReducer
+├── types/        userTypes, workoutTypes, templateTypes (workout types are defined once and the TS type is derived from them)
 ├── utils/        storage (localStorage helper), date (start of the current week)
 └── data/         users.json (fake user database)
 ```
@@ -76,9 +80,3 @@ src/
 
 - **Login is not secure, by design.** Passwords live in a JSON file and are checked in the browser, as the assignment requires a fake database. A real app would check credentials on a server.
 - **TypeScript 6, not 7.** TypeScript 7 no longer ships the JavaScript API that `react-scripts` needs, so CRA can't use it. The `overrides` field in `package.json` lets TypeScript 6 install alongside `react-scripts`, which officially asks for TypeScript 4.
-
-## Possible improvements
-
-- Personal records per exercise
-- Reusable workout templates
-- Weekly goal (e.g. 4 workouts) with a progress bar

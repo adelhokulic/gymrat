@@ -35,7 +35,7 @@ const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 		name: "exercises",
 	});
 	const { addWorkout, updateWorkout } = useWorkout();
-	const { templates } = useTemplate();
+	const { templates, deleteTemplate } = useTemplate();
 
 	const handleTemplate = (value: string) => {
 		const id = Number(value);
@@ -100,6 +100,21 @@ const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 							);
 						})}
 					</select>
+					<div className="template-chips">
+						{templates.map((template) => (
+							<span key={template.id} className="template-chip">
+								{template.name}
+								<button
+									type="button"
+									className="template-chip-remove"
+									aria-label={`Delete template ${template.name}`}
+									onClick={() => deleteTemplate(template.id)}
+								>
+									✕
+								</button>
+							</span>
+						))}
+					</div>
 				</div>
 			)}
 			<div className="workout-form-row">

@@ -40,6 +40,7 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 								type="button"
 								className="workout-exercise-remove"
 								aria-label="Remove exercise"
+								disabled={workout.exercises.length === 1}
 							>
 								✕
 							</button>

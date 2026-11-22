@@ -12,6 +12,46 @@
 	color: var(--color-text);
 }
 
+/* filter po vrsti: red "pilula", aktivna je narandžasta */
+.workout-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.filter-btn {
+	padding: 6px 12px;
+	font-size: 13px;
+	font-weight: 600;
+	font-family: inherit;
+	text-transform: capitalize;
+	color: var(--color-text-soft);
+	background: var(--color-surface);
+	border: 1px solid var(--color-border-strong);
+	border-radius: 999px;
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.filter-btn:hover {
+	border-color: var(--color-primary);
+}
+
+.filter-btn.active {
+	color: #ffffff;
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+}
+
+/* kad filter nema rezultata, a treninga ima */
+.workout-list-no-results {
+	margin: 0;
+	padding: 24px 16px;
+	text-align: center;
+	font-size: 14px;
+	color: var(--color-text-muted);
+}
+
 .workout-list-empty {
 	margin: 0;
 	padding: 48px 16px;
@@ -188,9 +228,15 @@
 	transition: color 0.15s, background 0.15s;
 }
 
-.workout-exercise-remove:hover {
+.workout-exercise-remove:hover:not(:disabled) {
 	color: var(--color-danger);
 	background: var(--color-danger-soft);
+}
+
+/* zadnja vježba se ne može obrisati */
+.workout-exercise-remove:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
 }
 
 /* dugmad na dnu kartice */

@@ -1,0 +1,64 @@
+.weekly-stats {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.weekly-stats-title {
+	margin: 0;
+	font-size: 20px;
+	color: var(--color-text);
+}
+
+/* tri pločice u redu */
+.weekly-stats-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.stat-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 14px 12px;
+	background: var(--color-surface);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-card);
+	min-width: 0;
+}
+
+/* prva pločica narandžasta, da se istakne */
+.stat-tile:first-child {
+	color: #ffffff;
+	background: var(--color-primary);
+}
+
+.stat-tile:first-child .stat-label {
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.stat-value {
+	font-size: 26px;
+	font-weight: 800;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.stat-unit {
+	margin-left: 2px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-text-muted);
+}
+
+.stat-label {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}

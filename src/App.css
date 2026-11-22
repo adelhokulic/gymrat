@@ -17,3 +17,11 @@
 		padding-top: 32px;
 	}
 }
+
+/* desna kolona: statistika iznad liste treninga */
+.app-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	min-width: 0;
+}

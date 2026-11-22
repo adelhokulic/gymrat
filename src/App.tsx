@@ -1,6 +1,7 @@
 import "./App.css";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
+import WeeklyStats from "./components/WeeklyStats";
 import WorkoutForm from "./components/WorkoutForm";
 import WorkoutList from "./components/WorkoutList";
 import { useAuth } from "./context/AuthContext";
@@ -14,7 +15,10 @@ const App = () => {
 					<Navbar />
 					<main className="app-main">
 						<WorkoutForm />
-						<WorkoutList />
+						<div className="app-sidebar">
+							<WeeklyStats />
+							<WorkoutList />
+						</div>
 					</main>
 				</>
 			) : (

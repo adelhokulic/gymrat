@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# GymRat
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A training journal with user login. Each user logs workouts with exercises, edits them directly in the list, filters them by type and sees statistics for the current week.
 
-## Available Scripts
+Built as an assignment in the ITMentorstva frontend program.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Login** with credentials checked against a JSON file (fake database). The logged-in user stays logged in after a page refresh.
+- **Guests see only the login page.**
+- **New workout form**: date, type (strength, cardio, stretching), duration in minutes, and a dynamic list of exercises (name, sets, reps, weight), with validation.
+- **Inline editing**: clicking **Edit** turns a workout card into a pre-filled form. **Save** updates the workout and **Cancel** discards the changes.
+- **Deleting** a whole workout or a single exercise. The last exercise in a workout can't be removed.
+- **Filter by type**: All, Strength, Cardio, Stretching.
+- **Weekly statistics** for the current week (from Monday): number of workouts, total minutes and heaviest lift.
+- **Per-user data**: each user sees only their own workouts.
+- **Persistence**: user and workouts are saved in `localStorage`.
+- Responsive layout: form and list side by side on wide screens, stacked on phones.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React 19 + TypeScript 6
+- Create React App
+- React Hook Form (`useForm`, `useFieldArray`)
+- Context API + `useReducer` for global state
+- Plain CSS with CSS custom properties
 
-### `npm test`
+## Getting started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+npm start
+```
 
-### `npm run build`
+The app runs at http://localhost:3000.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Test users
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Username | Password | Name |
+|---|---|---|
+| `adel` | `123456` | Adel Hokulic |
+| `merima` | `123456` | Merima Mulic |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Log in as both to see that each user only has access to their own workouts.
 
-### `npm run eject`
+## State management
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The assignment suggests **Recoil** (atoms + an atom effect for `localStorage`). This project uses **Context + `useReducer`** instead, because Recoil is no longer maintained and doesn't support React 19. The same ideas map one to one:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Recoil (assignment) | This project |
+|---|---|
+| atom for the logged-in user | `AuthContext` + `authReducer` |
+| atom for workouts | `WorkoutContext` + `workoutReducer` |
+| one atom effect that saves several atoms to `localStorage` | one shared helper, `loadFromStorage` / `saveToStorage` (`src/utils/storage.ts`), used by both contexts: lazy init in `useReducer` for reading, `useEffect` for writing |
+| `useRecoilValue` / `useSetRecoilState` | custom hooks `useAuth()` and `useWorkout()` |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Global vs. local state**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Global** (context): the logged-in user and all workouts, because many components need them.
+- **Local** (`useState` in a component): whether a card is in edit mode (`WorkoutCard`), the active filter (`WorkoutList`) and the login error message (`Login`), because only one component needs each of them.
+- **Derived** (calculated on every render, never stored): the current user's workouts, filtered workouts and the weekly statistics.
 
-## Learn More
+## Project structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+src/
+├── components/   Login, Navbar, WorkoutForm, WorkoutList, WorkoutCard, WeeklyStats
+├── context/      AuthContext, WorkoutContext (providers + useAuth / useWorkout hooks)
+├── reducer/      authReducer, workoutReducer
+├── types/        userTypes, workoutTypes (workout types are defined once and the TS type is derived from them)
+├── utils/        storage (localStorage helper), date (start of the current week)
+└── data/         users.json (fake user database)
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Notes
 
-### Code Splitting
+- **Login is not secure, by design.** Passwords live in a JSON file and are checked in the browser, as the assignment requires a fake database. A real app would check credentials on a server.
+- **TypeScript 6, not 7.** TypeScript 7 no longer ships the JavaScript API that `react-scripts` needs, so CRA can't use it. The `overrides` field in `package.json` lets TypeScript 6 install alongside `react-scripts`, which officially asks for TypeScript 4.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Possible improvements
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Personal records per exercise
+- Reusable workout templates
+- Weekly goal (e.g. 4 workouts) with a progress bar

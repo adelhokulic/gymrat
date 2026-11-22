@@ -153,6 +153,7 @@
 .exercise-field {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-end; /* input uvijek na dnu, i kad se labela prelomi u dva reda */
 	gap: 4px;
 	min-width: 0;
 }

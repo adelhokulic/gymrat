@@ -3,6 +3,7 @@ import { useWorkout } from "../context/WorkoutContext";
 import { Workout } from "../types/workoutTypes";
 import "./WorkoutCard.css";
 import WorkoutForm from "./WorkoutForm";
+import { useTemplate } from "../context/TemplateContext";
 
 type WorkoutCardProp = {
 	workout: Workout;
@@ -11,6 +12,15 @@ type WorkoutCardProp = {
 const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 	const { deleteWorkout, deleteExercise } = useWorkout();
 	const [isWorkoutEditing, setIsWorkoutEditing] = useState(false);
+	const { addTemplate } = useTemplate();
+
+	const onNameTemplate = () => {
+		const name = window.prompt("Template name");
+		if (name === null || name.trim() === "") {
+			return;
+		}
+		addTemplate(name.trim(), workout);
+	};
 
 	return isWorkoutEditing ? (
 		<WorkoutForm workout={workout} onClose={() => setIsWorkoutEditing(false)} />
@@ -50,6 +60,13 @@ const WorkoutCard = ({ workout }: WorkoutCardProp) => {
 			</ul>
 
 			<footer className="workout-card-actions">
+				<button
+					onClick={() => onNameTemplate()}
+					type="button"
+					className="card-btn card-btn--template"
+				>
+					Save as template
+				</button>
 				<button
 					onClick={() => setIsWorkoutEditing(true)}
 					type="button"

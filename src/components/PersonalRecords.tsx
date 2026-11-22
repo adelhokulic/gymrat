@@ -30,28 +30,26 @@ const PersonalRecords = () => {
 		);
 	}
 
-	if (sortedRecords.length > 0) {
-		return (
-			<section className="personal-records">
-				<h2 className="personal-records-title">Personal records</h2>
+	return (
+		<section className="personal-records">
+			<h2 className="personal-records-title">Personal records</h2>
 
-				<ol className="personal-records-list">
-					{sortedRecords.map(([name, weight], index) => {
-						return (
-							<li key={name} className="record">
-								<span className="record-rank">{index + 1}</span>
-								<span className="record-name">{name}</span>
-								<span className="record-weight">
-									{weight}
-									<span className="record-unit">kg</span>
-								</span>
-							</li>
-						);
-					})}
-				</ol>
-			</section>
-		);
-	}
+			<ol className="personal-records-list">
+				{sortedRecords.map(([name, weight], index) => {
+					return (
+						<li key={name} className="record">
+							<span className="record-rank">{index + 1}</span>
+							<span className="record-name">{name}</span>
+							<span className="record-weight">
+								{weight}
+								<span className="record-unit">kg</span>
+							</span>
+						</li>
+					);
+				})}
+			</ol>
+		</section>
+	);
 };
 
 export default PersonalRecords;

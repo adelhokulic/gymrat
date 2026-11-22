@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./context/AuthContext";
 import { WorkoutProvider } from "./context/WorkoutContext";
+import { TemplateProvider } from "./context/TemplateContext";
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement,
@@ -13,7 +14,9 @@ root.render(
 	<React.StrictMode>
 		<AuthProvider>
 			<WorkoutProvider>
-				<App />
+				<TemplateProvider>
+					<App />
+				</TemplateProvider>
 			</WorkoutProvider>
 		</AuthProvider>
 	</React.StrictMode>,

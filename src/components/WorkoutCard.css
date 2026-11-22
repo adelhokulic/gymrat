@@ -276,3 +276,15 @@
 .card-btn--delete:hover {
 	background: var(--color-danger-soft);
 }
+
+/* "Save as template": diskretno, lijevo od Edit/Delete */
+.card-btn--template {
+	margin-right: auto;
+	padding-left: 0;
+	color: var(--color-text-muted);
+	background: transparent;
+}
+
+.card-btn--template:hover {
+	color: var(--color-primary);
+}

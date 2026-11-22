@@ -6,6 +6,7 @@ import {
 } from "../types/workoutTypes";
 import { useWorkout } from "../context/WorkoutContext";
 import "./WorkoutForm.css";
+import { useTemplate } from "../context/TemplateContext";
 
 type WorkoutFormProps = {
 	workout?: Workout;
@@ -34,6 +35,24 @@ const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 		name: "exercises",
 	});
 	const { addWorkout, updateWorkout } = useWorkout();
+	const { templates } = useTemplate();
+
+	const handleTemplate = (value: string) => {
+		const id = Number(value);
+		const findTemplate = templates.find((template) => template.id === id);
+		if (!findTemplate) {
+			return;
+		}
+		reset(
+			{
+				date: new Date().toISOString().slice(0, 10),
+				type: findTemplate.type,
+				duration: findTemplate.duration,
+				exercises: findTemplate.exercises,
+			},
+			{ keepDefaultValues: true },
+		);
+	};
 
 	const onSubmit = (data: WorkoutFormValues) => {
 		const newWorkout = {
@@ -65,6 +84,24 @@ const WorkoutForm = ({ workout, onClose }: WorkoutFormProps) => {
 				<p className="workout-form-subtitle">Log what you did today</p>
 			</div>
 
+			{!workout && templates.length > 0 && (
+				<div className="form-field template-picker">
+					<label htmlFor="template">Template</label>
+					<select
+						id="template"
+						onChange={(e) => handleTemplate(e.target.value)}
+					>
+						<option value="">Use a template…</option>
+						{templates.map((template) => {
+							return (
+								<option key={template.id} value={template.id}>
+									{template.name}
+								</option>
+							);
+						})}
+					</select>
+				</div>
+			)}
 			<div className="workout-form-row">
 				<div className="form-field">
 					<label htmlFor="date">Date</label>
